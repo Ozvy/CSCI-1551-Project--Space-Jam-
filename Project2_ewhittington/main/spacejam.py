@@ -1,71 +1,21 @@
 from direct.showbase.ShowBase import ShowBase
-
+from panda3d.core import Vec3
+import SpaceJamClasses as spaceJamClasses
+import DefensePaths as defensePaths
 class SetupScene(ShowBase):
     
     def __init__(self):
         ShowBase.__init__(self)
-        self.Universe = self.loader.loadModel("./assets/Universe/Universe.x")
-        self.Universe.reparentTo(self.render)
-        self.Universe.setScale(15000)
+        self.Universe = spaceJamClasses.Universe(self.loader, "./assets/Universe/Universe.x", self.render, "Universe", "./assets/Universe/Universe.jpg", (0, 0, 0), 10000)
+        self.PlayerShip = spaceJamClasses.SpaceShip(self.loader, "./assets/Spaceships/Dumbledore/Dumbledore.x", self.render, "PlayerShip", "./assets/Spaceships/Dumbledore/spacejet_C.png", Vec3(1000, 1200,-50), 50)
+        self.spaceStation1 = spaceJamClasses.SpaceStation(self.loader, "./assets/Space_Station/SpaceStation1B/spaceStation.x", self.render, "Space Station", "./assets/Space_Station/SpaceStation1B/SpaceStation1_Dif2.png", (1500, 1000, -100), 40)
+        self.Planet1 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet1", "./assets/Planets/planet1.jpg", (-6000, -3000, -800), 250)
+        self.Planet2 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet2", "./assets/Planets/planet2.jpg", (0, 6000, 0), 300)
+        self.Planet3 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet3", "./assets/Planets/planet3.jpg", (500, -5000, 200), 500)
+        self.Planet4 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet4", "./assets/Planets/planet4.jpg", (300, 6000, 500), 150)
+        self.Planet5 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet5", "./assets/Planets/planet5.jpg", (700, -2000, 100), 500)
+        self.Planet6 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet6", "./assets/Planets/planet6.jpg", (0, -900, -1400), 700)
 
-        self.playerShip = self.loader.loadModel("./assets/Spaceships/Dumbledore/Dumbledore.x")
-        self.playerShip.reparentTo(self.render)
-        self.playerShip.setPos(100,2000,0)
-        self.playerShip.setScale(200)
-        self.playerShip.setHpr(0,90,0)
-        self.spaceStation1 = self.loader.loadModel("./assets/Space_Station/SpaceStation1B/spaceStation.x")
-        self.spaceStation1.reparentTo(self.render)
-        self.spaceStation1.setPos(500,2900,20)
-        self.spaceStation1.setScale(50)
-        
-        
-
-
-        self.Planet1 = self.loader.loadModel("./assets/Planets/protoPlanet.x")
-        self.Planet1.reparentTo(self.render)
-        self.Planet1.setPos(150,5000,67)
-        self.Planet1.setScale(350)
-
-        self.Planet2 = self.loader.loadModel("./assets/Planets/protoPlanet.x")
-        self.Planet2.reparentTo(self.render)
-        self.Planet2.setPos(427,7000,234)
-        self.Planet2.setScale(800)
-
-        self.Planet3 = self.loader.loadModel("./assets/Planets/protoPlanet.x")
-        self.Planet3.reparentTo(self.render)
-        self.Planet3.setPos(-500,-3000,-200)
-        self.Planet3.setScale(340)
-
-        self.Planet4 = self.loader.loadModel("./assets/Planets/protoPlanet.x")
-        self.Planet4.reparentTo(self.render)
-        self.Planet4.setPos(598,-4398,-1200)
-        self.Planet4.setScale(150)
-
-        self.Planet5 = self.loader.loadModel("./assets/Planets/protoPlanet.x")
-        self.Planet5.reparentTo(self.render)
-        self.Planet5.setPos(460,-5942,455)
-        self.Planet5.setScale(400)
-
-        self.Planet6 = self.loader.loadModel("./assets/Planets/protoPlanet.x")
-        self.Planet6.reparentTo(self.render)
-        self.Planet6.setPos(200,400,-2000)
-        self.Planet6.setScale(200)
-
-        uniTex = self.loader.loadTexture("./main/assets/Universe/starfield-in-blue.jpg")
-        plan1Tex = self.loader.loadTexture("./main/assets/Planets/planet1.jpg")
-        plan2Tex = self.loader.loadTexture("./main/assets/Planets/planet2.jpg")
-        plan3Tex = self.loader.loadTexture("./main/assets/Planets/planet3.jpg")
-        plan4Tex = self.loader.loadTexture("./main/assets/Planets/planet4.jpg")
-        plan5Tex = self.loader.loadTexture("./main/assets/Planets/planet5.jpg")
-        plan6Tex = self.loader.loadTexture("./main/assets/Planets/planet6.jpg")
-
-        self.Universe.setTexture(uniTex,1)
-        self.Planet1.setTexture(plan1Tex,1)
-        self.Planet2.setTexture(plan2Tex,1)
-        self.Planet3.setTexture(plan3Tex,1)
-        self.Planet4.setTexture(plan4Tex,1)
-        self.Planet5.setTexture(plan5Tex,1)
-        self.Planet6.setTexture(plan6Tex,1)
     
 
         
