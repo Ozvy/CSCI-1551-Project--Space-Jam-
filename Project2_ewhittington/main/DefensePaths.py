@@ -25,13 +25,30 @@ def BaseBallSeams(step, numSeams, B, F = 1):
     z = R * zzz / rrr
 
     return Vec3(x, y, z)
+
 def CircleX(thetaNum):
 
+        x = 0.0 * math.tan(thetaNum)
+        y = 50.0 * math.cos(thetaNum)
+        z = 50.0 * math.sin(thetaNum)
+
+        return Vec3(x, y, z)
+
+def CircleY(thetaNum):
         x = 50.0 * math.cos(thetaNum)
         y = 0.0 * math.tan(thetaNum)
         z = 50.0 * math.sin(thetaNum)
 
         return Vec3(x, y, z)
+
+def CircleZ(thetaNum):
+
+        x = 50.0 * math.cos(thetaNum)
+        y = 50.0 * math.sin(thetaNum)
+        z = 0.0 * math.tan(thetaNum)
+
+        return Vec3(x, y, z)
+       
         
 
       
