@@ -10,6 +10,7 @@ def Cloud(radius = 1):
         return unitVec * radius
 def BaseBallSeams(step, numSeams, B, F = 1):
     time = step / float(numSeams) * 2 * math.pi
+
     F4 = 0
     R = 1
 
@@ -17,7 +18,7 @@ def BaseBallSeams(step, numSeams, B, F = 1):
     yyy = math.sin(time) + B * math.sin(3 * time)
     zzz = F * math.cos(2 * time) + F4 * math.cos(4 * time)
 
-    rrr = math.sqrt(xxx ** 2 + yyy ** 2 + zzz **2)
+    rrr = math.sqrt(xxx ** 2 + yyy ** 2 + zzz ** 2)
 
     x = R * xxx / rrr
     y = R * yyy / rrr
