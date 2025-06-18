@@ -24,17 +24,27 @@ class SetupScene(ShowBase):
             
             self.DrawCloudDefense(self.Planet1, nickName)
             self.DrawBaseballSeams(self.spaceStation1, nickName, j, fullCycle, 2)
-    
+            self.DrawCircleX(self.Planet2, nickName, (0.32*j))
+
     def DrawBaseballSeams(self, centralObject, droneName, step, numSeams, radius = 1):
         unitVec = defensePaths.BaseBallSeams(step, numSeams, B = 0.4)
         unitVec.normalize()
         position = unitVec * radius * 250 + centralObject.modelNode.getPos()
         spaceJamClasses.Drone(self.loader, "./assets/DroneDefender/DroneDefender.obj", self.render, droneName, "./assets/DroneDefender/octotoad1_auv.png", position, 5)
+
     def DrawCloudDefense(self, centralObject, droneName):
         unitVec = defensePaths.Cloud()
         unitVec.normalize()
         position = unitVec * 500 + centralObject.modelNode.getPos()
         spaceJamClasses.Drone(self.loader, "./assets/DroneDefender/DroneDefender.obj", self.render, droneName, "./assets/DroneDefender/octotoad1_auv.png", position, 10)
+    
+    def DrawCircleX(self, centralObject, droneName, countUp):
+        unitVec = defensePaths.CircleX(countUp)
+        unitVec.normalize()
+        position = unitVec * 350 + centralObject.modelNode.getPos()
+        spaceJamClasses.Drone(self.loader, "./assets/DroneDefender/DroneDefender.obj", self.render, droneName, "./assets/DroneDefender/octotoad1_auv.png", position, 5)
+        
+
     
 
         
