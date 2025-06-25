@@ -18,6 +18,7 @@ class SetupScene(ShowBase):
         self.Planet6 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet6", "./assets/Planets/planet6.jpg", (0, -900, -1400), 700)
 
         fullCycle = 60
+        self.SetCamera()
         for j in range(fullCycle):
             spaceJamClasses.Drone.droneCount += 1
             nickName = "Drone" + str(spaceJamClasses.Drone.droneCount)
@@ -61,7 +62,7 @@ class SetupScene(ShowBase):
     def SetCamera(self):
         self.disableMouse()
         self.camera.reparentTo(self.PlayerShip.modelNode)
-        self.camera.setfluidPos(0, 1, 0)
+        self.camera.setFluidPos(0, 1, 0)
         
 
     
