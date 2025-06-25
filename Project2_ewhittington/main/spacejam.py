@@ -58,6 +58,10 @@ class SetupScene(ShowBase):
         unitVec.normalize()
         position = unitVec * 200 + centralObject.modelNode.getPos()
         spaceJamClasses.Drone(self.loader, "./assets/DroneDefender/DroneDefender.obj", self.render, droneName, "./assets/DroneDefender/octotoad1_auv.png", position, 5)
+    def SetCamera(self):
+        self.disableMouse()
+        self.camera.reparentTo(self.PlayerShip.modelNode)
+        self.camera.setfluidPos(0, 1, 0)
         
 
     
