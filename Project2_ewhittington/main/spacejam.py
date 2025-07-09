@@ -1,5 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
-from panda3d.core import Vec3, CollisionTraverser, CollisionHandlerPusher
+from panda3d.core import Vec3, CollisionTraverser, CollisionHandlerPusher, TransparencyAttrib
+from direct.gui.OnscreenImage import OnscreenImage
 import SpaceJamClasses as spaceJamClasses
 import DefensePaths as defensePaths
 import Player as playerClasses
@@ -27,6 +28,7 @@ class SetupScene(ShowBase):
         self.cTrav.showCollisions(self.render)
         fullCycle = 60
         self.SetCamera()
+        self.EnableHUD()
         for j in range(fullCycle):
             spaceJamClasses.Drone.droneCount += 1
             nickName = "Drone" + str(spaceJamClasses.Drone.droneCount)
@@ -71,7 +73,9 @@ class SetupScene(ShowBase):
         self.disableMouse()
         self.camera.reparentTo(self.PlayerShip.modelNode)
         self.camera.setFluidPos(0, 1, 0)
-        
+    def EnableHUD(self):
+        self.Hud = OnscreenImage(image = './assets/Hud/Reticle3b.png', pos = Vec3(0, 0, 0), scale = 0.1)
+        self.Hud.setTransparency(TransparencyAttrib.MAlpha)
 
     
 
