@@ -66,9 +66,10 @@ class SpaceStation(CapsuleCollidableObject):
 
 class Drone(SphereCollideObject):
     droneCount = 0
-    def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
+    def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float, rotVec):
         super(Drone, self).__init__(loader, modelPath, parentNode, nodeName, Vec3(0,0,0), 4)
         self.modelNode.setPos(posVec)
+        self.modelNode.setHpr(rotVec)
         self.modelNode.setScale(scaleVec)
 
         self.modelNode.setName(nodeName)
