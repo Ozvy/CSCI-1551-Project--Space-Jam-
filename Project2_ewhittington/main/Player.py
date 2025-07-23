@@ -1,5 +1,5 @@
 from CollideObjectBase import SphereCollideObject
-from panda3d.core import Loader, NodePath, Vec3, CollisionHandlerEvent, CollisionTraverser
+from panda3d.core import Loader, NodePath, Vec3, CollisionHandlerEvent, CollisionTraverser, TransparencyAttrib
 from direct.interval.LerpInterval import LerpFunc
 from direct.particles.ParticleEffect import ParticleEffect
 from SpaceJamClasses import Missile
@@ -7,9 +7,11 @@ from direct.task.Task import TaskManager
 from typing import Callable
 from direct.task import Task
 from direct.showbase.ShowBase import ShowBase
+from direct.gui.OnscreenImage import OnscreenImage
+from direct.gui.OnscreenText import OnscreenText
+
 import re
-import os
-print(f"Current Working Directory: {os.getcwd()}")
+
 
 
 
@@ -52,8 +54,13 @@ class SpaceShip(SphereCollideObject):
         self.cntExplode = 0
         self.explodeIntervals = {}
         self.SetParticles()
-       
         
+        self.shotHud = OnscreenImage(image = './assets/Hud/shotchargeFULL.png', pos = Vec3(-1.1, 0, -0.15), scale = 0.2)
+        self.shotHud.setTransparency(TransparencyAttrib.MAlpha)
+        self.boostHud = OnscreenImage(image = './assets/Hud/boostchargeFULL.png', pos = Vec3(-1.1, 0, -0.6), scale = 0.2)
+        self.boostHud.setTransparency(TransparencyAttrib.MAlpha)
+        self.points = 0
+        self.pointHud = OnscreenText(text = f'Score: {self.points}', pos = Vec3(0.9, 0.9, 0), fg = (1, 1, 1, 1), scale = 0.07, mayChange = True)
         
         self.setKeyBindings()
 
@@ -158,11 +165,12 @@ class SpaceShip(SphereCollideObject):
     def Boost(self):
         if self.shipBoosts:
             self.shipBoosts = 0
+            self.UpdateBoostHud()
             if not self.taskMgr.hasTaskNamed('stop-boost'):
                 self.taskMgr.doMethodLater(self.boostTime, self.StopBoost, 'stop-boost')
             self.movespeed = 10
             
-            print('boosted!')
+            # print('boosted!')
         else: 
             if not self.taskMgr.hasTaskNamed('reload-boost'):
                 self.taskMgr.doMethodLater(0, self.ReloadBoost, 'reload-boost')
@@ -170,14 +178,15 @@ class SpaceShip(SphereCollideObject):
     def StopBoost(self, task):
         self.movespeed = 5
         
-        print('boost stopped')
+        # print('boost stopped')
     def ReloadBoost(self, task):
         if task.time > self.chargeTime:
             self.shipBoosts += 1
-            print("Charge done!")
+            # print("Charge done!")
+            self.UpdateBoostHud()
             return Task.done
         elif task.time <= self.chargeTime:
-            print("Charge proceeding..")
+            # print("Charge proceeding..")
             return Task.cont
 
 
@@ -190,7 +199,7 @@ class SpaceShip(SphereCollideObject):
                 del Missile.fireModels[i]
                 del Missile.cNodes[i]
                 del Missile.collisionSolids[i]
-                print(i + ' has reached the end of its fire solution')
+                # print(i + ' has reached the end of its fire solution')
                 break
         return Task.cont
 
@@ -204,6 +213,7 @@ class SpaceShip(SphereCollideObject):
             inFront = aim * 150
             travVec = fireSolution + self.modelNode.getPos()
             self.missileBay -= 1
+            self.UpdateShotHud()
             tag = 'Missile' + str(Missile.missileCount)
             posVec = self.modelNode.getPos() + inFront
             currentMissile = Missile(self.loader, './assets/Phaser/phaser.egg', self.render, tag, posVec, 4.0)
@@ -220,36 +230,44 @@ class SpaceShip(SphereCollideObject):
     def Reload(self, task):
         if task.time > self.reloadTime:
             self.missileBay += 1
-            print('reload complete')
+            # print('reload complete')
+            self.UpdateShotHud()
             return Task.done
         elif task.time <= self.reloadTime:
-            print("Reload proceeding..")
+            # print("Reload proceeding..")
             return Task.cont
         if self.missileBay > 1:
             self.missileBay = 1
     def HandleInto(self, entry):
         fromNode = entry.getFromNodePath().getName()
-        print("fromNode: " + fromNode)
+        # print("fromNode: " + fromNode)
         intoNode = entry.getIntoNodePath().getName()
-        print("intoNode: " + intoNode)
+        # print("intoNode: " + intoNode)
         intoPosition = Vec3(entry.getSurfacePoint(self.render))
         tempVar = fromNode.split('_')
-        print("tempVar: " + str(tempVar))
+        # print("tempVar: " + str(tempVar))
         shooter = tempVar[0]
-        print("Shooter: " + str(shooter))
+        # print("Shooter: " + str(shooter))
         tempVar = intoNode.split('-')
-        print('TempVar1: ' + str(tempVar))
+        # print('TempVar1: ' + str(tempVar))
         tempVar = intoNode.split('_')
-        print('TempVar2: ' + str(tempVar))
+        # print('TempVar2: ' + str(tempVar))
         victim = tempVar[0]
-        print('Victim: ' + str(victim))
+        # print('Victim: ' + str(victim))
         pattern = r'[0-9]'
         strippedString = re.sub(pattern, '', victim)
         if (strippedString == "Drone" or strippedString == "Planet" or strippedString == "Space Station"):
-            print(victim, ' hit at ', intoPosition)
+            if strippedString == "Drone":
+                self.points += 1
+            elif strippedString == "Planet":
+                self.points += 10
+            elif strippedString == "Space Station":
+                self.points += 100
+            # print(victim, ' hit at ', intoPosition)
             self.DestroyObject(victim, intoPosition)
-
+# 
             print(shooter + ' is DONE.')
+            self.UpdateScoreHud()
             Missile.Intervals[shooter].finish()
 
     def DestroyObject(self, hitID, hitPosition):
@@ -275,3 +293,26 @@ class SpaceShip(SphereCollideObject):
         #self.explodeEffect.loadConfig('./assets/Part-Fx/Part-Efx/basic_xpld_efx.ptf')
         #self.explodeEffect.setScale(20)
         self.explodeNode = self.render.attachNewNode('ExplosionEffects')
+
+        # HUD SCRIPTS: 
+
+        
+    def UpdateShotHud(self):
+        if self.missileBay:
+            self.shotHud.setImage('./assets/Hud/shotchargeFULL.png')
+            self.shotHud.setTransparency(TransparencyAttrib.MAlpha)
+        else:
+            self.shotHud.setImage('./assets/Hud/shotchargeempty.png')
+            self.shotHud.setTransparency(TransparencyAttrib.MAlpha)
+    def UpdateBoostHud(self):
+        if self.shipBoosts:
+            self.boostHud.setImage('./assets/Hud/boostchargeFULL.png')
+            self.boostHud.setTransparency(TransparencyAttrib.MAlpha)
+        else:
+            self.boostHud.setImage('./assets/Hud/boostchargeempty.png')
+            self.boostHud.setTransparency(TransparencyAttrib.MAlpha)
+    def UpdateScoreHud(self):
+        self.pointHud.setText(f'Score: {self.points}')
+    
+        
+        

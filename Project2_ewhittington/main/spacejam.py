@@ -29,7 +29,14 @@ class SetupScene(ShowBase):
         self.Planet4 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet4", "./assets/Planets/planet4.jpg", (300, 6000, 500), 150)
         self.Planet5 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet5", "./assets/Planets/planet5.jpg", (700, -2000, 100), 500)
         self.Planet6 = spaceJamClasses.Planet(self.loader, "./assets/Planets/protoPlanet.x", self.render, "Planet6", "./assets/Planets/planet6.jpg", (0, -900, -1400), 700)
-        
+        self.Sentinal1 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./assets/DroneDefender/DroneDefender.obj", self.render, 
+        "Drone", 6.0, random.choice(self.droneTexPath), self.Planet5, 900, "MLB", self.PlayerShip)
+        self.Sentinal2 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./assets/DroneDefender/DroneDefender.obj", self.render, 
+        "Drone", 6.0, random.choice(self.droneTexPath), self.Planet2, 500, "Cloud", self.PlayerShip)
+        self.Sentinal3 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./assets/DroneDefender/DroneDefender.obj", self.render, 
+        "Drone", 6.0, random.choice(self.droneTexPath), self.Planet3, 600, "MLB", self.PlayerShip)
+        self.Sentinal4 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./assets/DroneDefender/DroneDefender.obj", self.render, 
+        "Drone", 6.0, random.choice(self.droneTexPath), self.Planet6, 900, "Cloud", self.PlayerShip)
         self.pusher.addCollider(self.PlayerShip.collisionNode, self.PlayerShip.modelNode)
         self.cTrav.addCollider(self.PlayerShip.collisionNode, self.pusher)
         
@@ -37,7 +44,7 @@ class SetupScene(ShowBase):
 
         fullCycle = 60
         self.SetCamera()
-        self.EnableHUD()
+        self.EnableHUDs()
         for j in range(fullCycle):
             spaceJamClasses.Drone.droneCount += 1
             nickName = "Drone" + str(spaceJamClasses.Drone.droneCount)
@@ -48,6 +55,7 @@ class SetupScene(ShowBase):
             self.DrawCircleX(self.Planet2, nickName, (0.64*j))
             self.DrawCircleY(self.Planet3, nickName, (0.32*j))
             self.DrawCircleZ(self.Planet4, nickName, (0.32*j))
+        
 
     def DrawBaseballSeams(self, centralObject, droneName, step, numSeams, radius = 1):
         unitVec = defensePaths.BaseBallSeams(step, numSeams, B = 0.4)
@@ -84,7 +92,7 @@ class SetupScene(ShowBase):
         self.disableMouse()
         self.camera.reparentTo(self.PlayerShip.modelNode)
         self.camera.setFluidPos(0, 1, 0)
-    def EnableHUD(self):
+    def EnableHUDs(self):
         self.Hud = OnscreenImage(image = './assets/Hud/Reticle3b.png', pos = Vec3(0, 0, 0), scale = 0.1)
         self.Hud.setTransparency(TransparencyAttrib.MAlpha)
 
