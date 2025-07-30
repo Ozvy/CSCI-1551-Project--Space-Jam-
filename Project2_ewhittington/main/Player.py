@@ -55,6 +55,13 @@ class SpaceShip(SphereCollideObject):
         self.explodeIntervals = {}
         self.SetParticles()
         
+        self.fire_sfx = self.base.loader.loadSfx("./assets/Sounds/laser.ogg")
+        self.thrust_sfx = self.base.loader.loadSfx("./assets/Sounds/thrust.ogg")
+        self.boost_sfx = self.base.loader.loadSfx("./assets/Sounds/boost.ogg")
+        self.explode_sfx = self.base.loader.loadSfx("./assets/Sounds/explode.ogg")
+        self.bigexplode_sfx = self.base.loader.loadSfx("./assets/Sounds/bigexplode.ogg")
+
+        
         self.shotHud = OnscreenImage(image = './assets/Hud/shotchargeFULL.png', pos = Vec3(-1.1, 0, -0.15), scale = 0.2)
         self.shotHud.setTransparency(TransparencyAttrib.MAlpha)
         self.boostHud = OnscreenImage(image = './assets/Hud/boostchargeFULL.png', pos = Vec3(-1.1, 0, -0.6), scale = 0.2)
@@ -98,8 +105,10 @@ class SpaceShip(SphereCollideObject):
     
     def Thrust(self, keyDown):
         if keyDown:
+            self.thrust_sfx.play()
             self.taskMgr.add(self.ApplyThrust, 'forward-thrust')
         else:
+            self.thrust_sfx.stop()
             self.taskMgr.remove('forward-thrust')
             
     def leftTurn(self, keyDown):
@@ -164,6 +173,7 @@ class SpaceShip(SphereCollideObject):
 
     def Boost(self):
         if self.shipBoosts:
+            self.boost_sfx.play()
             self.shipBoosts = 0
             self.UpdateBoostHud()
             if not self.taskMgr.hasTaskNamed('stop-boost'):
@@ -177,6 +187,7 @@ class SpaceShip(SphereCollideObject):
                 return Task.cont
     def StopBoost(self, task):
         self.movespeed = 5
+        self.boost_sfx.stop()
         
         # print('boost stopped')
     def ReloadBoost(self, task):
@@ -206,6 +217,7 @@ class SpaceShip(SphereCollideObject):
     def fire(self):
         
         if self.missileBay:
+            self.fire_sfx.play()
             travRate = self.missileDistance
             aim = self.render.getRelativeVector(self.modelNode, Vec3.forward())
             aim.normalize()
@@ -230,7 +242,7 @@ class SpaceShip(SphereCollideObject):
     def Reload(self, task):
         if task.time > self.reloadTime:
             self.missileBay += 1
-            # print('reload complete')
+            print('reload complete')
             self.UpdateShotHud()
             return Task.done
         elif task.time <= self.reloadTime:
@@ -259,13 +271,15 @@ class SpaceShip(SphereCollideObject):
         if (strippedString == "Drone" or strippedString == "Planet" or strippedString == "Space Station"):
             if strippedString == "Drone":
                 self.points += 1
+                self.explode_sfx.play()
             elif strippedString == "Planet":
                 self.points += 10
+                self.bigexplode_sfx.play()
             elif strippedString == "Space Station":
                 self.points += 100
-            # print(victim, ' hit at ', intoPosition)
+                self.bigexplode_sfx.play()
+            print(victim, ' hit at ', intoPosition)
             self.DestroyObject(victim, intoPosition)
-# 
             print(shooter + ' is DONE.')
             self.UpdateScoreHud()
             Missile.Intervals[shooter].finish()

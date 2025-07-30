@@ -37,6 +37,8 @@ class SetupScene(ShowBase):
         "Drone", 6.0, random.choice(self.droneTexPath), self.Planet3, 600, "MLB", self.PlayerShip)
         self.Sentinal4 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./assets/DroneDefender/DroneDefender.obj", self.render, 
         "Drone", 6.0, random.choice(self.droneTexPath), self.Planet6, 900, "Cloud", self.PlayerShip)
+        self.Wanderer1 = spaceJamClasses.Wanderer(self.loader, "./assets/DroneDefender/DroneDefender.obj", self.render, "Drone", 6.0, "./assets/DroneDefender/octotoad1_auv.png", self.PlayerShip)
+        self.Wanderer2 = spaceJamClasses.Wanderer(self.loader, "./assets/DroneDefender/DroneDefender.obj", self.render, "Drone", 6.0, "./assets/DroneDefender/octotoad1_auv.png", self.PlayerShip)
         self.pusher.addCollider(self.PlayerShip.collisionNode, self.PlayerShip.modelNode)
         self.cTrav.addCollider(self.PlayerShip.collisionNode, self.pusher)
         
@@ -76,7 +78,7 @@ class SetupScene(ShowBase):
         unitVec.normalize()
         position = unitVec * 350 + centralObject.modelNode.getPos()
         spaceJamClasses.Drone(self.loader, "./assets/DroneDefender/DroneDefender.obj", self.render, droneName, random.choice(self.droneTexPath), position, 5, (random.randint(-360, 360), random.randint(-360, 360), random.randint(-360, 360)))
-    
+
     def DrawCircleY(self, centralObject, droneName, countUp):
         unitVec = defensePaths.CircleY(countUp)
         unitVec.normalize()

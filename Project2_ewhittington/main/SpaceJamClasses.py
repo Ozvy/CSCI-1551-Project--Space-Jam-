@@ -1,6 +1,7 @@
 from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
 from direct.task.Task import TaskManager
+from direct.interval.IntervalGlobal import *
 import DefensePaths as defensePaths
 from CollideObjectBase import *
 from panda3d.core import Loader, NodePath, Vec3 #import * strangely doesnt work.
@@ -111,6 +112,23 @@ class Orbiter(SphereCollideObject):
                 self.modelNode.setPos(positionVec * self.orbitRadius + self.orbitObject.modelNode.getPos())
         self.modelNode.lookAt(self.staringAt.modelNode)
         return task.cont
+class Wanderer(SphereCollideObject):
+    numWanderers = 0
+    def __init__(self, loader: Loader, modelPath:str, parentNode: NodePath, modelName: str, scaleVec: Vec3, texPath: str, staringAt: Vec3):
+        super(Wanderer,self).__init__(loader, modelPath, parentNode, modelName, Vec3(0,0,0), 3.2)
+
+        self.modelNode.setScale(scaleVec)
+        tex = loader.loadTexture(texPath)
+        self.modelNode.setTexture(tex, 1)
+        self.staringAt = staringAt
+        Wanderer.numWanderers += 1
+        posInterval0 = self.modelNode.posInterval(20, Vec3(300, 6000, 500), startPos = Vec3(0, 0, 0))
+        posInterval1 = self.modelNode.posInterval(20, Vec3(700,-2000, 100), startPos = Vec3(300, 6000, 500))
+        posInterval2 = self.modelNode.posInterval(20, Vec3(700, -2000, 100), startPos = Vec3(300, 6000, 500))
+        self.travelRoute = Sequence(posInterval0, posInterval1, posInterval2, name = "Traveler")
+        self.travelRoute.loop()
+        
+    
         
     
     
