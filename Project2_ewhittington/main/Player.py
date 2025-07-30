@@ -276,8 +276,10 @@ class SpaceShip(SphereCollideObject):
                 self.points += 10
                 self.bigexplode_sfx.play()
             elif strippedString == "Space Station":
-                self.points += 100
+                self.points -= 10
                 self.bigexplode_sfx.play()
+            if self.points < 0:
+                self.points = 0
             print(victim, ' hit at ', intoPosition)
             self.DestroyObject(victim, intoPosition)
             print(shooter + ' is DONE.')
